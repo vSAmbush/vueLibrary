@@ -1,0 +1,58 @@
+@import "general";
+
+.form-component {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0 10px 0;
+
+  &.centered {
+    align-items: center;
+    justify-content: center;
+  }
+
+  & label {
+    font-size: 24px;
+  }
+
+  & textarea {
+    height: 120px;
+  }
+
+  & input[type=color] {
+    border-bottom: none;
+    width: 100%;
+    background-color: $main-text-color;
+  }
+
+  &-input {
+    border: none;
+    border-bottom: 2px solid $main-bg-color;
+    height: 50px;
+    outline: none;
+    font-size: 20px;
+    resize: none;
+  }
+
+  &-submit {
+    border: none;
+    height: 50px;
+    width: 300px;
+    max-width: 100%;
+    background-color: $special-color;
+    color: $main-text-color;
+    border-radius: 5px;
+    font-size: 20px;
+    outline: none;
+  }
+
+  &-link {
+    color: blue;
+    margin: 10px 0;
+  }
+
+  .help-text {
+    color: red;
+    font-weight: bold;
+    margin: 15px 0 0 0;
+  }
+}

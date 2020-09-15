@@ -29,6 +29,9 @@ export default {
     mounted() {
         this.isOverflowed = this.checkOverflow();
     },
+    updated() {
+        this.isOverflowed = this.checkOverflow();
+    },
     methods: {
         checkOverflow() {
             const content = this.$refs.shelfContent;

@@ -1,7 +1,9 @@
 <template>
-    <div class="book" :style="{'background-color': book.wrap_color}">
-        <h1 class="book-title">{{book.title}}</h1>
-    </div>
+    <router-link :to="'/book/' + book.id">
+        <div class="book" :style="{'background-color': book.wrap_color}">
+            <h1 class="book-title">{{book.title}}</h1>
+        </div>
+    </router-link>
 </template>
 
 <script>
@@ -9,12 +11,7 @@ export default {
     name: "Book",
     props: {
         book: Object
-    },
-    /*computed: {
-        bookColor() {
-            return Config.colorSet[Math.floor(Math.random() * Config.colorSet.length)];
-        }
-    }*/
+    }
 }
 </script>
 

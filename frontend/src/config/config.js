@@ -8,5 +8,17 @@ export default {
         '#86da25',
         '#bd0600'
     ],
-    restDomainUrl: 'http://localhost:8080/api'
+    restDomainUrl: 'http://localhost:8080/api',
+    userKey: 'USER',
+    tokenKey: 'TOKEN',
+    getHeaders(headers = {}) {
+        if (localStorage.getItem(this.tokenKey)) {
+            return {
+                ...headers,
+                'Authorization': 'Bearer ' + localStorage.getItem(this.tokenKey)
+            }
+        }
+
+        return headers;
+    }
 }

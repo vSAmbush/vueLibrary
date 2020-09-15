@@ -5,6 +5,7 @@ namespace app\modules\api\models;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "books".
@@ -17,7 +18,7 @@ use yii\behaviors\TimestampBehavior;
  * @property int|null $updated_at
  * @property int|null $created_by
  */
-class Book extends \yii\db\ActiveRecord
+class Book extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -34,6 +35,7 @@ class Book extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'wrap_color'], 'required'],
+            [['title', 'overview'], 'filter', 'filter' => '\yii\helpers\HtmlPurifier::process'],
             [['overview'], 'string'],
             [['created_at', 'updated_at', 'created_by'], 'integer'],
             [['title'], 'string', 'max' => 32],

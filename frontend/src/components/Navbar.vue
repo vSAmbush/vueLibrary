@@ -1,14 +1,32 @@
 <template>
     <div class="nav-bar">
-        <router-link class="nav-bar-link" to="/">Your Library</router-link>
-        <router-link class="nav-bar-link" to="/auth/login">Login</router-link>
+        <router-link class="nav-bar-link" to="/">Library</router-link>
+        <router-link v-if="!isAuthenticated" class="nav-bar-link" to="/auth/login">Login</router-link>
+        <a v-else class="nav-bar-link" type="button" @click="invokeLogout">Hi, {{user.username}}! (Logout)</a>
     </div>
 </template>
 
 <script>
-    export default {
-        name: "Navbar"
+import { mapGetters, mapActions } from "vuex";
+
+export default {
+    name: "Navbar",
+    computed: {
+        ...mapGetters({
+            'isAuthenticated': 'auth/isAuthenticated',
+            'user': 'auth/getUser'
+        })
+    },
+    methods: {
+        ...mapActions({
+            'logoutUser': 'auth/logoutUser'
+        }),
+
+        invokeLogout() {
+           this.logoutUser();
+        }
     }
+}
 </script>
 
 <style lang="scss" scoped>

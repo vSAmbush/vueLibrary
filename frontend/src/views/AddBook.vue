@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <form id="add-book-form" class="add-book-form" @submit.prevent="addNewBook">
+        <form id="add-book-form" class="add-book-form" @submit.prevent="submitNewBook">
             <div class="form-component">
                 <label for="title">Book Title:</label>
                 <input id="title" type="text" class="form-component-input" v-model="title" placeholder="Enter book title...">
@@ -26,6 +26,7 @@
 
 <script>
 import Config from "../config/config";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
     name: "AddBook",
@@ -33,90 +34,41 @@ export default {
         return {
             title: '',
             overview: '',
-            wrap_color: this.randomBookColor(),
-            errors: {}
+            wrap_color: this.randomBookColor()
         }
     },
+    computed: {
+        ...mapGetters({
+            errors: 'book/getErrors'
+        })
+    },
     methods: {
-        addNewBook() {
-            fetch(Config.restDomainUrl + '/books', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(this.$data)
-            })
-            .then(response => response.json())
-            .then(result => {
-               if (Array.isArray(result) && result.length) {
-                   this.errors = [];
-                    for (let error of result) {
-                        this.errors[error.field] = error.message;
-                    }
-               } else {
-                   this.$router.push('/');
-               }
-            });
+        ...mapActions({
+            'addNewBook': 'book/addNewBook',
+            'clearErrors': 'book/clearErrors'
+        }),
+
+        submitNewBook() {
+            this.title = this.title.charAt(0).toUpperCase() + this.title.slice(1);
+            this.addNewBook(this.$data);
         },
         randomBookColor() {
             return Config.colorSet[Math.floor(Math.random() * Config.colorSet.length)];
         }
+    },
+    beforeRouteLeave(to, from, next) {
+        this.clearErrors();
+
+        next();
     }
 }
 </script>
 
 <style lang="scss" scoped>
-    @import '../scss/general';
+    @import "../scss/form";
 
     .add-book-form {
         display: flex;
         flex-direction: column;
-    }
-
-    .form-component {
-        display: flex;
-        flex-direction: column;
-        margin: 20px 0 10px 0;
-
-        & label {
-            font-size: 24px;
-        }
-
-        & textarea {
-            height: 120px;
-        }
-
-        & input[type=color] {
-            border-bottom: none;
-            width: 100%;
-            background-color: $main-text-color;
-        }
-
-        &-input {
-            border: none;
-            border-bottom: 2px solid $main-bg-color;
-            height: 50px;
-            outline: none;
-            font-size: 20px;
-            resize: none;
-        }
-
-        &-submit {
-            border: none;
-            height: 50px;
-            width: 300px;
-            max-width: 100%;
-            background-color: $special-color;
-            color: $main-text-color;
-            border-radius: 5px;
-            font-size: 20px;
-            outline: none;
-        }
-
-        .help-text {
-            color: red;
-            font-weight: bold;
-            margin: 15px 0 0 0;
-        }
     }
 </style>

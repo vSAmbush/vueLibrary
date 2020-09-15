@@ -7,54 +7,35 @@
                     <a class="add-btn"><i class="fas fa-plus"></i></a>
                 </div>
             </router-link>
-            <Shelf v-for="(shelf, key, index) of shelves" :shelf="shelf" :label="key" :key="index"/>
+            <Loader v-if="!Object.keys(this.allShelves).length"/>
+            <Shelf v-else v-for="(shelf, key, index) of allShelves" :ref="shelf + index" :shelf="shelf" :label="key" :key="index"/>
         </div>
     </div>
 </template>
 
 <script>
 import Shelf from "../components/Shelf";
-import Config from "../config/config";
+import { mapActions, mapGetters } from "vuex";
+import Loader from "../components/Loader";
 
 export default {
     name: "Library",
     components: {
+        Loader,
         Shelf
     },
-    methods: {
-        fetchBooks() {
-            fetch(Config.restDomainUrl + '/books?per-page=50', {
-                method: 'GET'
-            })
-                .then(response => response.json())
-                .then(unsortedBooks => {
-                    if (unsortedBooks.length) {
-                        let currentLabel = unsortedBooks[0].title.substr(0, 1);
-                        this.shelves[currentLabel] = [];
-                        for (let book of unsortedBooks) {
-                            let tempLabel = book.title.substr(0, 1);
-
-                            if (currentLabel !== tempLabel) {
-                                currentLabel = tempLabel;
-                                this.shelves[currentLabel] = [];
-                            }
-
-                            this.shelves[currentLabel].push(book);
-                        }
-                    }
-                });
-        }
+    computed: {
+        ...mapGetters({
+            allShelves: 'book/getShelves'
+        })
     },
-    data() {
-        return {
-            shelves: {}
-        }
+    methods: {
+        ...mapActions({
+            fetchAllShelves: 'book/fetchAllOrderedBooks'
+        })
     },
     mounted() {
-        this.fetchBooks();
-    },
-    updated() {
-        this.fetchBooks();
+        this.fetchAllShelves();
     }
 }
 </script>
